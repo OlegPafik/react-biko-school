@@ -3,54 +3,50 @@ import React, { useEffect, useState } from 'react'
 import { api } from '../../api'
 
 export const Home = () => {
-  // Get all comics
   const [comics, setComics] = useState([])
+  const [characters, setCharacters] = useState([])
+  const [character1, setCharacter1] = useState("")  
+  const [character2, setCharacter2] = useState("")
+  const [firstCharacterComics, setFirstCharacterComics] = useState([])  
+  const [secondCharacterComics, setSecondCharacterComics] = useState([])
 
   const getComics = async () => {
     const comicsReceived = await api.allComics()
     setComics(comicsReceived)
   }
 
-  useEffect(() => {
-    getComics()
-  }, [])
-
- 
-  // Get all characters
-  const [characters, setCharacters] = useState([])
-
   const getCharacters = async () => {
     const charactersReceived = await api.characters()
     setCharacters(charactersReceived)
   }
-
-  useEffect(() => {
-    getCharacters()
-  }, [])
-
-
-  // Selected characters
-  const [character1, setCharacter1] = useState("")  
-  const [character2, setCharacter2] = useState("")
-
-  // Get firstCharacterComics and secondCharacterComics
-  const [firstCharacterComics, setCharacter1Comics] = useState("")  
-  const [secondCharacterComics, setCharacter2Comics] = useState("")
 
   const getCharacterComics = async (character, setCharacterComics) => {
     const receivedCharacterComics = await api.comics(character)
     setCharacterComics(receivedCharacterComics)
   }
 
-  //let comic1 = getCharacterComics(character1, setCharacter1Comics)
-  //let comic2 = getCharacterComics(character2, setCharacter2Comics)
+  useEffect(() => {
+    getComics()
+    getCharacters()
+  }, [])
+
+  useEffect(() => {
+    getCharacterComics(character1, setFirstCharacterComics)
+  }, [character1])
+
+  useEffect(() => {
+    getCharacterComics(character2, setSecondCharacterComics)
+  }, [character2])
+
+  const commonComics = firstCharacterComics.filter(
+     comic1 => secondCharacterComics.some(comic2 => comic1.id === comic2.id)
+    )
 
   return (
     <main className="container">
       <Header />
-      <p>{character1}</p>
-      <p>{character2}</p>
-      <ComicList comics={comics} characters={characters} setCharacter1={setCharacter1} setCharacter2={setCharacter2} />
+      <ComicList comics={commonComics} characters={characters} 
+      setCharacter1={setCharacter1} setCharacter2={setCharacter2} />
       <Footer itemsCount={comics.length} />
     </main>
   )
@@ -69,7 +65,8 @@ const Header = () => {
   )
 }
 
-const ComicList = ({ comics, characters, setCharacter1, setCharacter2}) => {
+const ComicList = ({ 
+  comics, characters, setCharacter1, setCharacter2}) => {
 
   return (
     <section>
@@ -102,12 +99,8 @@ const Footer = ({ itemsCount }) => {
 }
 
 const Select = ({ options, setCharacter }) => {
-  //const commonComics = firstCharacterComics.filter(
-  //  comic1 => secondCharacterComics.some(comic2 => comic.id === comic2.id)
-  //)
-
   return (
-    <select className="characterSelector" onChange={(e) => setCharacter(e.target.value)}>
+    <select className="characterSelector" onChange={(e) => {setCharacter(e.target.value)}}>
       <option value="" />
       {
         options.map(option => {
