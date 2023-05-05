@@ -1,39 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect} from 'react'
 import './Home.css'
-
-const comics = [
-  {
-    id: 45977,
-    title: 'Captain America (2012) #11',
-    characters: ['Captain America']
-  },
-  {
-    id: 43722,
-    title: 'Captain America (2012) #1',
-    characters: ['Captain America']
-  },
-  {
-    id: 40391,
-    title: 'Captain America (2011) #18',
-    characters: ['Captain America']
-  },
-  {
-    id: 43339,
-    title: 'Uncanny Avengers (2012) #1',
-    characters: ['Captain America', 'Havok', 'Rogue', 'Scarlet Witch', 'Thor', 'Wolverine']
-  }
-]
+import { api } from '../../api'
 
 export const Home = () => {
   const [filter, setFilter] = useState('')
+  const [comics, setComics] = useState([])
 
+  const getComics = async () => {
+    const comicsReceived = await api.allComics()
+    setComics(comicsReceived)
+  }
+
+  useEffect(() => {
+    const receivedComics = getComics()
+    console.log(receivedComics)
+  }, [])
+  
+  console.log('------->',comics)
   const filteredComics = comics.filter(comic => comic.title.toLowerCase().includes(filter.toLowerCase()))
 
   return (
     <main className="container">
       <Header />
-      <ComicList comics={filteredComics} filter={filter} onFilter={setFilter} />
-      <Footer itemsCount={filteredComics.length} />
+      <ComicList comics={filteredComics ?? []} filter={filter} onFilter={setFilter} />
+      <Footer itemsCount={filteredComics?.length ?? 0} />
     </main>
   )
 }
