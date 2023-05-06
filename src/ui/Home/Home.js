@@ -1,6 +1,21 @@
 import './Home.css'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, createContext, useContext } from 'react'
 import { api } from '../../api'
+
+const themes = {
+  light: {
+    name: "claro",
+    foreground: "#000000",
+    background: "#eeeeee"
+  },
+  dark: {
+    name: "oscuro",
+    foreground: "#ffffff",
+    background: "#222222"
+  }
+}
+
+const ThemeContext = createContext(themes.light)
 
 export const Home = () => {
   const [firstCharacterSelect, setFirstCharacterSelect] = useState()
@@ -39,26 +54,29 @@ export const Home = () => {
   }
 
   return (
-    <main className="container">
-      <Header />
-      <ComicList characters={characters}
-                 firstCharacterSelect={firstCharacterSelect}
-                 secondCharacterSelect={secondCharacterSelect}
-                 onFirstCharacterSelect={setFirstCharacterSelect}
-                 onSecondCharacterSelect={setSecondCharacterSelect}
-                 comics={comics}
-                 onClear={clearSearch}
-      />
-      <Footer itemsCount={comics.length} />
-    </main>
+    <ThemeContext.Provider value={themes.dark}>
+      <main className="container">
+        <Header />
+        <ComicList characters={characters}
+                  firstCharacterSelect={firstCharacterSelect}
+                  secondCharacterSelect={secondCharacterSelect}
+                  onFirstCharacterSelect={setFirstCharacterSelect}
+                  onSecondCharacterSelect={setSecondCharacterSelect}
+                  comics={comics}
+                  onClear={clearSearch}
+        />
+        <Footer itemsCount={comics.length} />
+      </main>
+    </ThemeContext.Provider>
   )
 }
 
 const Header = () => {
+  const theme = useContext(ThemeContext)
   return (
     <header>
       <div className="checkboxContainer">
-        <span className="checkboxLabel">El tema actual es: claro</span>
+        <span className="checkboxLabel">El tema actual es: {theme.name}</span>
         <input className="checkbox" type="checkbox" />
       </div>
       <h1 className="title">
