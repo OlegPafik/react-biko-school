@@ -5,6 +5,7 @@ export const api = {
   },
 
   comics: async (characterId) => {
+    console.log(characterId)
     const response = await fetch(`/api/comics-${characterId}.json`)
     return await response.json()
   },
