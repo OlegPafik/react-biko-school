@@ -1,33 +1,7 @@
 import './Home.css'
-import React, { useEffect, useState, createContext, useContext } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { api } from '../../api'
-
-const themes = {
-  light: {
-    name: "claro",
-    foreground: "#000000",
-    background: "#ffffff"
-  },
-  dark: {
-    name: "oscuro",
-    foreground: "#ffffff",
-    background: "#222222"
-  }
-}
-
-const ThemeContext = createContext({theme: themes.light, modifyTheme: () => {}, allThemes: themes})
-
-const ThemeProvider = ({ children }) => {
-
-  const [theme, setTheme] = useState(useContext(ThemeContext).theme)
-  const themesP = useContext(ThemeContext).allThemes
-
-  return (
-    <ThemeContext.Provider value={{theme, modifyTheme: setTheme, allThemes: themesP}}>
-      { children }
-    </ThemeContext.Provider>
-  )
-}
+import { ThemeProvider , ThemeContext } from '../_context/ThemeProvider'
 
 export const Home = () => {
   const [firstCharacterSelect, setFirstCharacterSelect] = useState()
@@ -118,11 +92,12 @@ const ComicList = ({
                      onFirstCharacterSelect,
                      onSecondCharacterSelect,
                      onClear
-                   }) => {
+  }) => {
+  const {theme, modifyTheme: setTheme, allThemes: themes} = useContext(ThemeContext)
   const selectOptions = characters.map(character => ({ value: character.id, label: character.name }))
 
   return (
-    <section>
+    <section style={{background: theme.background, color: theme.foreground}}>
       <p className="inputLabel">
         Selecciona una pareja de personajes
       </p>
