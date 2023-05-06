@@ -15,13 +15,15 @@ const themes = {
   }
 }
 
-const ThemeContext = createContext({theme: themes.light, modifyTheme: () => {}})
+const ThemeContext = createContext({theme: themes.light, modifyTheme: () => {}, allThemes: themes})
 
 const ThemeProvider = ({ children }) => {
+
   const [theme, setTheme] = useState(useContext(ThemeContext).theme)
+  const themesP = useContext(ThemeContext).allThemes
 
   return (
-    <ThemeContext.Provider value={{theme, modifyTheme: setTheme}}>
+    <ThemeContext.Provider value={{theme, modifyTheme: setTheme, allThemes: themesP}}>
       { children }
     </ThemeContext.Provider>
   )
@@ -82,13 +84,20 @@ export const Home = () => {
 }
 
 const Header = () => {
-  const {theme, setTheme} = useContext(ThemeContext)
+  const {theme, modifyTheme: setTheme, allThemes: themes} = useContext(ThemeContext)
+  const onCheck = (e) =>{
+    if (e.target.checked) {
+      setTheme(themes.dark)
+    } else {
+      setTheme(themes.light)
+    }
+  }
 
   return (
     <header>
       <div className="checkboxContainer">
         <span className="checkboxLabel">El tema actual es: {theme.name}</span>
-        <input className="checkbox" type="checkbox" />
+        <input className="checkbox" type="checkbox" onChange={onCheck}/>
       </div>
       <h1 className="title">
         Buscador de cómics de Marvel
