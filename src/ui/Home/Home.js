@@ -6,7 +6,7 @@ const themes = {
   light: {
     name: "claro",
     foreground: "#000000",
-    background: "#eeeeee"
+    background: "#ffffff"
   },
   dark: {
     name: "oscuro",
@@ -85,6 +85,7 @@ export const Home = () => {
 
 const Header = () => {
   const {theme, modifyTheme: setTheme, allThemes: themes} = useContext(ThemeContext)
+  
   const onCheck = (e) =>{
     if (e.target.checked) {
       setTheme(themes.dark)
@@ -94,10 +95,10 @@ const Header = () => {
   }
 
   return (
-    <header>
+    <header style={{background: theme.background, color: theme.foreground}}>
       <div className="checkboxContainer">
-        <span className="checkboxLabel">El tema actual es: {theme.name}</span>
         <input className="checkbox" type="checkbox" onChange={onCheck}/>
+        <span className="checkboxLabel">El tema actual es: {theme.name}</span>
       </div>
       <h1 className="title">
         Buscador de cómics de Marvel
