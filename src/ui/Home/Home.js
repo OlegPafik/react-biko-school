@@ -15,7 +15,17 @@ const themes = {
   }
 }
 
-const ThemeContext = createContext(themes.light)
+const ThemeContext = createContext({theme: themes.light, modifyTheme: () => {}})
+
+const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useState(useContext(ThemeContext).theme)
+
+  return (
+    <ThemeContext.Provider value={{theme, modifyTheme: setTheme}}>
+      { children }
+    </ThemeContext.Provider>
+  )
+}
 
 export const Home = () => {
   const [firstCharacterSelect, setFirstCharacterSelect] = useState()
@@ -54,8 +64,8 @@ export const Home = () => {
   }
 
   return (
-    <ThemeContext.Provider value={themes.dark}>
-      <main className="container">
+    <main className="container">
+      <ThemeProvider>
         <Header />
         <ComicList characters={characters}
                   firstCharacterSelect={firstCharacterSelect}
@@ -66,13 +76,14 @@ export const Home = () => {
                   onClear={clearSearch}
         />
         <Footer itemsCount={comics.length} />
-      </main>
-    </ThemeContext.Provider>
+      </ThemeProvider>
+    </main>
   )
 }
 
 const Header = () => {
-  const theme = useContext(ThemeContext)
+  const {theme, setTheme} = useContext(ThemeContext)
+
   return (
     <header>
       <div className="checkboxContainer">
