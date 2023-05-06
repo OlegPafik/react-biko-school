@@ -40,8 +40,8 @@ export const Home = () => {
   }
 
   return (
-    <main className="container">
-      <ThemeProvider>
+    <ThemeProvider>
+      <main className="container" >
         <Header />
         <ComicList characters={characters}
                   firstCharacterSelect={firstCharacterSelect}
@@ -52,14 +52,14 @@ export const Home = () => {
                   onClear={clearSearch}
         />
         <Footer itemsCount={comics.length} />
-      </ThemeProvider>
-    </main>
+      </main>
+    </ThemeProvider>
   )
 }
 
 const Header = () => {
   const {theme, modifyTheme: setTheme, allThemes: themes} = useContext(ThemeContext)
-  
+
   const onCheck = (e) =>{
     if (e.target.checked) {
       setTheme(themes.dark)
@@ -69,7 +69,7 @@ const Header = () => {
   }
 
   return (
-    <header style={{background: theme.background, color: theme.foreground}}>
+    <header>
       <div className="checkboxContainer">
         <input className="checkbox" type="checkbox" onChange={onCheck}/>
         <span className="checkboxLabel">El tema actual es: {theme.name}</span>
@@ -93,11 +93,10 @@ const ComicList = ({
                      onSecondCharacterSelect,
                      onClear
   }) => {
-  const {theme, modifyTheme: setTheme, allThemes: themes} = useContext(ThemeContext)
   const selectOptions = characters.map(character => ({ value: character.id, label: character.name }))
 
   return (
-    <section style={{background: theme.background, color: theme.foreground}}>
+    <section>
       <p className="inputLabel">
         Selecciona una pareja de personajes
       </p>
